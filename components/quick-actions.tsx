@@ -1,8 +1,10 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Timer, ListPlus, BrainCircuit } from "lucide-react"
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Timer, ListPlus, BrainCircuit } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -10,18 +12,34 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
+import { useState } from "react";
 
 function AddTaskDialog() {
+  const createTask = useMutation(api.tasks.createTask);
+  const subjects = useQuery(api.subjects.getSubjects);
+  const [title, setTitle] = useState("");
+  const [subjectId, setSubjectId] = useState("");
+
+  const handleSubmit = () => {
+    createTask({
+      title,
+      subjectId,
+      type: "Theory",
+      status: "pending",
+      priority: "medium",
+    });
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -42,35 +60,39 @@ function AddTaskDialog() {
             <Label htmlFor="task-name" className="text-right">
               Task
             </Label>
-            <Input id="task-name" placeholder="e.g., Solve PYQs" className="col-span-3" />
+            <Input
+              id="task-name"
+              placeholder="e.g., Solve PYQs"
+              className="col-span-3"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="subject" className="text-right">
               Subject
             </Label>
-            <Select>
+            <Select onValueChange={setSubjectId}>
               <SelectTrigger className="col-span-3">
                 <SelectValue placeholder="Select a subject" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="eng-math">Engineering Mathematics</SelectItem>
-                <SelectItem value="networks">Networks, Signals & Systems</SelectItem>
-                <SelectItem value="em-devices">Electronic Devices</SelectItem>
-                <SelectItem value="analog-circuits">Analog Circuits</SelectItem>
-                <SelectItem value="digital-circuits">Digital Circuits</SelectItem>
-                <SelectItem value="control-systems">Control Systems</SelectItem>
-                <SelectItem value="communications">Communications</SelectItem>
-                <SelectItem value="electromagnetics">Electromagnetics</SelectItem>
+                {subjects?.map((subject) => (
+                  <SelectItem key={subject._id} value={subject._id}>
+                    {subject.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
         </div>
-        <Button type="submit">Add Task</Button>
+        <Button type="submit" onClick={handleSubmit}>
+          Add Task
+        </Button>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
-
 
 export function QuickActions() {
   return (
@@ -90,5 +112,5 @@ export function QuickActions() {
         </Button>
       </CardContent>
     </Card>
-  )
+  );
 }
