@@ -16,6 +16,16 @@ Your project is live at:
 
 **[https://vercel.com/kumaarsk390-5403s-projects/v0-financial-dashboard-functiona](https://vercel.com/kumaarsk390-5403s-projects/v0-financial-dashboard-functiona)**
 
+## Environment Variables
+
+To deploy this project on Vercel, you will need to set the following environment variables:
+
+`CONVEX_DEPLOYMENT`
+`NEXT_PUBLIC_CONVEX_URL`
+`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+`CLERK_SECRET_KEY`
+`CLERK_FRONTEND_API_URL`
+
 ## Build your app
 
 Continue building your app on:
