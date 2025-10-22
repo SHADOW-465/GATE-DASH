@@ -1,3 +1,4 @@
+// app/layout.tsx
 import "./globals.css";
 import { Audiowide, Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -5,6 +6,7 @@ import { Sidebar } from "@/components/sidebar";
 import { TopNav } from "@/components/top-nav";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import ConvexClientProvider from "../convex/ConvexClientProvider";
+import { SettingsProvider } from "@/contexts/settings-context"; // Import SettingsProvider
 import type React from "react";
 
 const audiowide = Audiowide({
@@ -37,17 +39,22 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ConvexClientProvider>
-            <TooltipProvider delayDuration={0}>
-              <div className="min-h-screen flex">
-                <Sidebar />
-                <div className="flex-1">
-                  <TopNav />
-                  <div className="container mx-auto p-6 max-w-7xl">
-                    <main className="w-full">{children}</main>
+            {/* Move SettingsProvider to wrap TooltipProvider and the main layout */}
+            <SettingsProvider>
+              <TooltipProvider delayDuration={0}>
+                <div className="min-h-screen flex">
+                  <Sidebar />
+                  <div className="flex-1 flex flex-col overflow-hidden"> {/* Added flex flex-col */}
+                    <TopNav />
+                    <div className="flex-1 overflow-y-auto"> {/* Added flex-1 and overflow */}
+                      <div className="container mx-auto p-6 max-w-7xl">
+                        <main className="w-full">{children}</main>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </TooltipProvider>
+              </TooltipProvider>
+            </SettingsProvider>
           </ConvexClientProvider>
         </ThemeProvider>
       </body>
