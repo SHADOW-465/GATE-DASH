@@ -26,7 +26,11 @@ import { useState } from "react";
 
 function AddTaskDialog() {
   const createTask = useMutation(api.tasks.createTask);
-  const subjects = useQuery(api.subjects.getSubjects);
+  const currentUser = useQuery(api.users.getCurrentUser);
+  const subjects = useQuery(
+    api.subjects.getSubjects,
+    currentUser ? { userId: currentUser._id } : "skip"
+  );
   const [title, setTitle] = useState("");
   const [subjectId, setSubjectId] = useState("");
 
