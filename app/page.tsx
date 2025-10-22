@@ -9,7 +9,11 @@ import { QuickActions } from "@/components/quick-actions";
 import { MotivationWidget } from "@/components/motivation-widget";
 
 export default function Dashboard() {
-  const subjects = useQuery(api.subjects.getSubjects);
+  const currentUser = useQuery(api.users.getCurrentUser);
+  const subjects = useQuery(
+    api.subjects.getSubjects,
+    currentUser ? { userId: currentUser._id } : "skip"
+  );
   const tasks = useQuery(api.tasks.getTasks, {
     date: new Date().toISOString().split("T")[0],
   });

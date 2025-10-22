@@ -9,7 +9,11 @@ import { WeeklyReview } from "@/components/weekly-review";
 import { ProgressCharts } from "@/components/progress-charts";
 
 export default function ProgressPage() {
-  const subjects = useQuery(api.subjects.getSubjects);
+  const currentUser = useQuery(api.users.getCurrentUser);
+  const subjects = useQuery(
+    api.subjects.getSubjects,
+    currentUser ? { userId: currentUser._id } : "skip"
+  );
   const tests = useQuery(api.tests.getTests);
 
   return (
